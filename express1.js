@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const mongodbURL=process.env.mongodbURL;
 // Connect to MongoDB
-mongoose.connect(mongodbURL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongodbURL)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB', err));
 
