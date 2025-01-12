@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const passport= require('./auth');
 const mongodbURL=process.env.mongodbURL;
 // Connect to MongoDB
 mongoose.connect(mongodbURL)
@@ -10,14 +11,10 @@ mongoose.connect(mongodbURL)
 
 const app = express();
 app.use(bodyParser.json());
+//middileware function
+app.use(passport.initialize());
+const localAuthMiddleware=passport.authenticate('local',{session:false});
 
-app.get('/', (req, res) => {
-  res.send('Welcome to my hotel.......How can I help you?');
-});
-
-app.get('/chicken', (req, res) => {
-  res.send('Sure sir! I would love to serve you chicken.');
-});
 
 app.get('/daal', (req, res) => {
   const customaized_daal = {
@@ -28,19 +25,10 @@ app.get('/daal', (req, res) => {
   res.send(customaized_daal);
 });
 
-app.get('/soup', (req, res) => {
-  res.send('Sure sir! I would love to serve you Korean soup.');
-});
-
-app.get('/noodles', (req, res) => {
-  res.send('Sure sir! I would love to serve you Chinese noodles.');
-});
-
-
 const personRoutes= require('./routes/personroutes');
-app.use('/person',personRoutes);
 const menuRoutes= require('./routes/menuroutes');
-app.use('/menu',menuRoutes);
+app.use('/person',personRoutes);
+app.use('/menu' ,menuRoutes);
 
 const PORT= process.env.PORT || 3000;
 app.listen(PORT, () => {
